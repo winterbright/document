@@ -2,3 +2,9 @@ git操作指南：
 一、建立版本库：
 	1、$cd $work               //$work表示目录
 	2、$git init			//建库
+
+二、生成快照：
+	1、git add .			//包含整个目录，可单独写某个文件
+	2、git commit -m "版本信息"		//提交到本地仓库
+
+	3、echo "zh" > .gitignore		//忽略机制，忽略zh文件夹
