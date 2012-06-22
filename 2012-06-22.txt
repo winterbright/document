@@ -34,3 +34,4 @@ struts.xml
 二、package
 	1、interceptors拦截器，登陆信息，日志
 	2、action
+sqlmap
