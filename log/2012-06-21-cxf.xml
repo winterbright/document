@@ -1,0 +1,87 @@
+﻿Apache CXF 是一个开放源代码框架，提供了用于方便地构建和开发 Web 服务的可靠基础架构。它允许创建高性能和可扩展的服务，您可以将这样的服务部署在 Tomcat 和基于 Spring 的轻量级容器中，以及部署在更高级的服务器上，例如 Jboss、IBM® WebSphere® 或 BEA WebLogic。
+ 该框架提供了以下功能：
+Web 服务标准支持：CXF 支持以下 Web 服务标准：
+Java API for XML Web Services (JAX-WS)
+SOAP
+Web 服务描述语言（Web Services Description Language ，WSDL）
+消息传输优化机制（Message Transmission Optimization Mechanism，MTOM）
+WS-Basic Profile
+WS-Addressing
+WS-Policy
+WS-ReliableMessaging
+WS-Security
+前端建模：CXF 提供了前端建模的概念，允许您使用不同的前端 API 来创建 Web 服务。API 允许您使用简单的工厂 Bean 并通过 JAX-WAS 实现来创建 Web 服务。它还允许您创建动态 Web 服务客户端。
+工具支持：CXF 提供了用于在 Java Bean、Web 服务和 WSDL 之间进行转换的不同工具。它提供了对 Maven 和 Ant 集成的支持，并无缝地支持 Spring 集成。
+RESTful 服务支持：CXF 支持代表性状态传输（Representational State Transfer，RESTful ）服务的概念，并支持 Java 平台的 JAX-RS 实现。（本系列的第 2 部分将提供有关 RESTful 服务的更多信息。）
+对不同传输和绑定的支持：CXF 支持不同种类的传输，从 XML 到逗号分隔值 (CSV)。除了支持 SOAP 和 HTTP 协议绑定之外，它还支持 Java Architecture for XML Binding (JAXB) 和 AEGIS 数据绑定。
+对非 XML 绑定的支持：CXF 支持非 XML 绑定，例如 JavaScript Object Notation (JSON) 和 Common Object Request Broker Architecture (CORBA)。它还支持 Java 业务集成（Java Business Integration，JBI）体系架构和服务组件体系架构（Service Component Architecture，SCA）。
+code first 或者 xml first  ： 支持使用code first 或者 xml first 的方式来创建web服务。
+
+ 一、 借助 annotation 创建独立启动的web 服务。
+ 1  首先服务点接口。
+ 	@WebService
+        public interface HelloWorld {
+             String sayHi(String text);
+        }
+ 2  编写服务实现
+ 3  编写 WebServiceApp.java类来暴露 web服务。
+ public class webServiceApp {
+   public static void main(String[] args) {
+     HelloWorldImpl implementor= new HelloWorldImpl();
+     String address="http://localhost:8080/helloWorld";
+     Endpoint.publish(address, implementor);
+   }
+ }
+ 4  启动WebServiceApp
+ 5  编写客户端访问服务。
+  public class HelloWorldClient {
+    public static void main(String[] args) {
+      JaxWsProxyFactoryBean svr = new JaxWsProxyFactoryBean();
+      svr.setServiceClass(HelloWorld.class);
+      svr.setAddress("http://localhost:8080/helloWorld");
+      HelloWorld hw = (HelloWorld) svr.create();
+      User user = new User();
+      user.setName("Tony");
+      user.setDescription("test");
+      System.out.println(hw.sayHiToUser(user));
+    }
+  }
+
+二 集成到spring 中。
+ 1 在 web.xml 中加入 ：
+       <?xml version="1.0" encoding="UTF-8"?>
+       <web-app>
+                <context-param>
+                          <param-name>contextConfigLocation</param-name>
+                          <param-value>WEB-INF/classes/applicationContext.xml,classpath:webservice-*.xml</param-value>
+                 </context-param>
+              <listener>
+                      <listener-class>
+                              org.springframework.web.context.ContextLoaderListener
+                      </listener-class>
+              </listener>
+              <servlet>
+                     <servlet-name>CXFServlet</servlet-name>
+                     <display-name>CXFServlet</display-name>
+                     <servlet-class>
+                            org.apache.cxf.transport.servlet.CXFServlet
+                     </servlet-class>
+                     <load-on-startup>1</load-on-startup>
+               </servlet>
+               <servlet-mapping>
+                      <servlet-name>CXFServlet</servlet-name>
+                      <url-pattern>/webservice/*</url-pattern>
+               </servlet-mapping>
+         </web-app>
+2  在 applicationContext.xml 中加入：
+
+        <import resource="classpath:META-INF/cxf/cxf.xml"/>
+        <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml"/>
+        <import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+
+	<jaxws:endpoint  id="helloWorld"  implementor="com.demo.HelloWorldImpl" address="/helloWorld" />
+
+	<jaxws:client id="helloWorld" 
+		address="http://localhost:8888/s/webservice/helloWorld" 
+		serviceClass="com.demo.HelloWorld" > 
+	</jaxws:client>
