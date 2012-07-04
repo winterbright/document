@@ -39,6 +39,7 @@ ${aa}
 </#list>   
 </#if > 
 
+
 condition(velocity)£º	
 #if  ($user ==  "Big Joe" )  
 list iterator-----------  
