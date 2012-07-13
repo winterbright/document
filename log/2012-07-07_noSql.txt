@@ -1,0 +1,13 @@
+再来NoSQL
+NoSQL致力于处理超大量的数据
+传统关系型数据库存在的问题：
+1、High performance - 对数据库高并发读写的需求
+2、Huge Storage - 对海量数据的高效率存储和访问的需求
+3、High Scalability && High Availability - 对数据库的高可扩展性和高可用性的需求
+关系型数据库的其他特性：
+1、数据库事务一致性需求
+2、数据库写实时性和读实时性
+3、复杂SQL查询
+NoSQL数据库开源软件
+Membase
+MongoDB

@@ -1,0 +1,4 @@
+﻿查看mysql的表结构
+一、desc tablename;
+二、show create table tablename;
+三、use information_schema;select * from columns where table_name='tablename'
