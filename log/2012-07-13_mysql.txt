@@ -2,3 +2,5 @@
 一、desc tablename;
 二、show create table tablename;
 三、use information_schema;select * from columns where table_name='tablename'
+
+SELECT column_name, data_type, character_maximum_length FROM COLUMNS WHERE table_name = 'z_my_log' AND table_schema = 'simple';
